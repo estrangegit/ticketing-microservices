@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CustomError } from '../errors/custom-error';
-import { RequestValidationError } from '../errors/request-validation-error';
 
 export const errorHandler = (
   err: Error,
