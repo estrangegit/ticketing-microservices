@@ -2,23 +2,24 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { BadRequestError } from '../errors/bad-request-error';
+import {
+  EMAIL_IS_ALREADY_IN_USE_ERROR_MESSAGE,
+  EMAIL_MUST_BE_VALID_ERROR_MESSAGE,
+  PASSWORD_MUST_BE_BETWEEN_4_and_20_CHARACTERS_ERROR_MESSAGE,
+} from '../errors/error-message';
 import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../model/user';
-
-const SIGN_UP_EMAIL_VALIDATION_ERROR_MESSAGE = 'Email must be valid';
-const SIGN_UP_PASSWORD_VALIDATION_ERROR_MESSAGE =
-  'Password must be between 4 and 20 characters';
 
 const router = express.Router();
 
 router.post(
   '/api/users/signup',
   [
-    body('email').isEmail().withMessage('Email must be valid'),
+    body('email').isEmail().withMessage(EMAIL_MUST_BE_VALID_ERROR_MESSAGE),
     body('password')
       .trim()
       .isLength({ min: 4, max: 20 })
-      .withMessage('Password must be between 4 and 20 characters'),
+      .withMessage(PASSWORD_MUST_BE_BETWEEN_4_and_20_CHARACTERS_ERROR_MESSAGE),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -26,7 +27,7 @@ router.post(
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      throw new BadRequestError('Email is already in use');
+      throw new BadRequestError(EMAIL_IS_ALREADY_IN_USE_ERROR_MESSAGE);
     }
 
     const user = User.build({ email, password });
@@ -50,8 +51,4 @@ router.post(
   }
 );
 
-export {
-  router as signupRouter,
-  SIGN_UP_EMAIL_VALIDATION_ERROR_MESSAGE,
-  SIGN_UP_PASSWORD_VALIDATION_ERROR_MESSAGE,
-};
+export { router as signupRouter };
