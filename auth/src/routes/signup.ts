@@ -5,6 +5,10 @@ import { BadRequestError } from '../errors/bad-request-error';
 import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../model/user';
 
+const SIGN_UP_EMAIL_VALIDATION_ERROR_MESSAGE = 'Email must be valid';
+const SIGN_UP_PASSWORD_VALIDATION_ERROR_MESSAGE =
+  'Password must be between 4 and 20 characters';
+
 const router = express.Router();
 
 router.post(
@@ -46,4 +50,8 @@ router.post(
   }
 );
 
-export { router as signupRouter };
+export {
+  router as signupRouter,
+  SIGN_UP_EMAIL_VALIDATION_ERROR_MESSAGE,
+  SIGN_UP_PASSWORD_VALIDATION_ERROR_MESSAGE,
+};
