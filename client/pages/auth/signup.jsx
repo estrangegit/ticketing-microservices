@@ -1,92 +1,63 @@
-import axios from 'axios';
+import { useState } from 'react';
+import useRequest from '../../hooks/useRequest';
 
-export default class CommentCreate extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { email: '', password: '', errors: [] };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-  }
+export default function Signup() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: {
+      email,
+      password,
+    },
+  });
 
-  handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const response = await axios.post('/api/users/signup', {
-        email: this.state.email,
-        password: this.state.password,
-      });
-      this.setState({ email: '', password: '', errors: '' });
-    } catch (err) {
-      this.setState({ ...this.state, errors: err.response.data.errors });
+    const resp = await doRequest();
+    if (resp) {
+      setEmail('');
+      setPassword('');
     }
   };
 
-  handleEmailChange = (event) => {
-    this.setState({ email: event.target.value, password: this.state.password });
-  };
-
-  handlePasswordChange = (event) => {
-    this.setState({ email: this.state.email, password: event.target.value });
-  };
-
-  buildErrors = (field) => {
-    console.log(this.state.errors);
-
-    return this.state.errors
-      .filter((err) => {
-        return err.field === field;
-      })
-      .map((err) => {
-        return (
-          <div key={err.message} className='row'>
-            <div className='offset-md-2 col-md-8 alert alert-danger'>
-              {err.message}
-            </div>
+  return (
+    <div className='container'>
+      <form onSubmit={handleSubmit}>
+        <h1 className='text-center'>Sign up</h1>
+        <div className='row'>
+          <div className='form-group offset-md-2 col-md-8'>
+            <label>Email Address</label>
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className='form-control'
+            />
           </div>
-        );
-      });
-  };
-
-  render() {
-    let emailErrors = this.buildErrors('email');
-    let passwordErrors = this.buildErrors('password');
-
-    return (
-      <div className='container'>
-        <form onSubmit={this.handleSubmit}>
-          <h1 className='text-center'>Sign up</h1>
+        </div>
+        <div className='row'>
+          <div className='form-group offset-md-2 col-md-8'>
+            <label>Password</label>
+            <input
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='form-control'
+            />
+          </div>
+        </div>
+        {errors && (
           <div className='row'>
-            <div className='form-group offset-md-2 col-md-8'>
-              <label>Email Address</label>
-              <input
-                value={this.state.email}
-                onChange={this.handleEmailChange}
-                className='form-control'
-              />
-            </div>
+            <div className='offset-md-2 col-md-8'>{errors}</div>
           </div>
-          {emailErrors}
-          <div className='row'>
-            <div className='form-group offset-md-2 col-md-8'>
-              <label>Password</label>
-              <input
-                type='password'
-                value={this.state.password}
-                onChange={this.handlePasswordChange}
-                className='form-control'
-              />
-            </div>
+        )}
+        <div className='row'>
+          <div className='offset-md-2'>
+            <button className='btn btn-primary'>Submit</button>
           </div>
-          {passwordErrors}
-          <div className='row'>
-            <div className='offset-md-2'>
-              <button className='btn btn-primary'>Submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    );
-  }
+        </div>
+      </form>
+    </div>
+  );
 }
