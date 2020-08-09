@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import { useState } from 'react';
 import useRequest from '../../hooks/useRequest';
 
@@ -11,15 +12,14 @@ export default function Signup() {
       email,
       password,
     },
+    onsuccess: () => {
+      Router.push('/');
+    },
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resp = await doRequest();
-    if (resp) {
-      setEmail('');
-      setPassword('');
-    }
+    doRequest();
   };
 
   return (
