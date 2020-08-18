@@ -6,7 +6,7 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { doRequest, errors } = useRequest({
-    url: '/api/users/signup',
+    url: '/api/users/signin',
     method: 'post',
     body: {
       email,
@@ -19,13 +19,13 @@ export default function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    doRequest();
+    await doRequest();
   };
 
   return (
     <div className='container'>
       <form onSubmit={handleSubmit}>
-        <h1 className='text-center'>Sign up</h1>
+        <h1 className='text-center'>Sign in</h1>
         <div className='row'>
           <div className='form-group offset-md-2 col-md-8'>
             <label>Email Address</label>
@@ -54,7 +54,7 @@ export default function Signup() {
         )}
         <div className='row'>
           <div className='offset-md-2'>
-            <button className='btn btn-primary'>Sign up</button>
+            <button className='btn btn-primary'>Sign in</button>
           </div>
         </div>
       </form>

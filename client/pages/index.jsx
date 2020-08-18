@@ -1,13 +1,12 @@
-import axios from 'axios';
+import buildClient from '../api/build-client';
 
-export default function HomePage(props) {
+const LandingPage = (props) => {
   if (props.currentUser) {
     return (
       <div className='container'>
         <h1>This is the landing page</h1>
         <h2>
-          You are currently logged in with the following email:{' '}
-          {props.currentUser.email}
+          You have signed in with the following email: {props.currentUser.email}
         </h2>
       </div>
     );
@@ -15,18 +14,16 @@ export default function HomePage(props) {
     return (
       <div className='container'>
         <h1>This is the landing page</h1>
-        <h2>Please login to access the web site</h2>
+        <h2>You are not signed in</h2>
       </div>
     );
   }
-}
+};
 
-export async function getServerSideProps(context) {
-  const response = await axios.get(
-    'http://auth-srv:3000/api/users/currentuser',
-    {
-      headers: context.req.headers,
-    }
-  );
-  return { props: response.data };
-}
+LandingPage.getInitialProps = async (context) => {
+  const client = buildClient(context);
+  const { data } = await client.get('/api/users/currentuser');
+  return data;
+};
+
+export default LandingPage;
