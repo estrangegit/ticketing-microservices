@@ -1,13 +1,13 @@
-import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
-import { BadRequestError } from '../errors/bad-request-error';
 import {
+  BadRequestError,
   EMAIL_IS_ALREADY_IN_USE_ERROR_MESSAGE,
   EMAIL_MUST_BE_VALID_ERROR_MESSAGE,
   PASSWORD_MUST_BE_BETWEEN_4_and_20_CHARACTERS_ERROR_MESSAGE,
-} from '../errors/error-message';
-import { validateRequest } from '../middlewares/validate-request';
+  validateRequest,
+} from '@ettickets/common';
+import express, { Request, Response } from 'express';
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
 import { User } from '../model/user';
 
 const router = express.Router();

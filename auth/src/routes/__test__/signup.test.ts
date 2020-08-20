@@ -1,10 +1,10 @@
-import request from 'supertest';
-import { app } from '../../app';
 import {
   EMAIL_IS_ALREADY_IN_USE_ERROR_MESSAGE,
   EMAIL_MUST_BE_VALID_ERROR_MESSAGE,
   PASSWORD_MUST_BE_BETWEEN_4_and_20_CHARACTERS_ERROR_MESSAGE,
-} from '../../errors/error-message';
+} from '@ettickets/common';
+import request from 'supertest';
+import { app } from '../../app';
 
 it('return a 201 in successful signup', async () => {
   return request(app)

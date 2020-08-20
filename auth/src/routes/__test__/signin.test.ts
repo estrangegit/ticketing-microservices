@@ -1,10 +1,10 @@
-import request from 'supertest';
-import { app } from '../../app';
 import {
   EMAIL_MUST_BE_VALID_ERROR_MESSAGE,
   INVALID_CREDENTIALS,
   YOU_MUST_SUPPLY_A_PASSWORD_ERROR_MESSAGE,
-} from '../../errors/error-message';
+} from '@ettickets/common';
+import request from 'supertest';
+import { app } from '../../app';
 
 it('return a 400 with an invalid email', async () => {
   const resp = await request(app)

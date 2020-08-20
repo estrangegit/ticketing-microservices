@@ -1,11 +1,11 @@
 {
   "name": "@ettickets/common",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "common service",
-  "main": "./build/index.js",
-  "types": "./build.index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
-    "./build/**/*"
+    "build/**/*"
   ],
   "scripts": {
     "clean": "del ./build/*",
