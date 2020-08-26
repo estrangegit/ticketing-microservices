@@ -6,7 +6,7 @@ it('responds with details about the current user', async () => {
   const email = 'test@test.com';
   const password = 'password';
 
-  const cookie = await signinHelper('test@test.com', 'password');
+  const cookie = await signinHelper(email, password);
 
   const resp = await request(app)
     .get('/api/users/currentuser')
