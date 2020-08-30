@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { app } from '../../app';
+import { Ticket } from '../../model/ticket';
 import { signinHelper } from '../../test/auth-helper';
 
 it('has a route handler listening to /api/tickets for post requests', async () => {
@@ -67,6 +68,9 @@ it('returns an error if the provided price is negative', async () => {
 it('creates a ticket with valid inputs', async () => {
   const cookie = await signinHelper('test@test.com');
 
+  let tickets = await Ticket.find({});
+  expect(tickets.length).toEqual(0);
+
   const title: string = 'title';
   const price: number = 10;
 
@@ -77,6 +81,13 @@ it('creates a ticket with valid inputs', async () => {
       title: title,
       price: price,
     });
-
   expect(response.status).toEqual(201);
+
+  tickets = await Ticket.find({});
+
+  console.log(tickets);
+
+  expect(tickets.length).toEqual(1);
+  expect(tickets[0].price).toEqual(10);
+  expect(tickets[0].title).toEqual('title');
 });
