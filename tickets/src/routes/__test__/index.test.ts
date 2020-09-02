@@ -3,7 +3,7 @@ import { app } from '../../app';
 import { signinHelper } from '../../test/auth-helper';
 
 const createTicket = async (title: string, price: number) => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
   await request(app).post('/api/tickets').set('Cookie', cookie).send({
     title,
     price,

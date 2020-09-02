@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
-const signin = (email: string) => {
+const signin = () => {
   const userJwt = jwt.sign(
     {
-      id: 1,
-      email: email,
+      id: mongoose.Types.ObjectId().toHexString(),
+      email: 'test@test.com',
     },
     process.env.JWT_KEY!
   );

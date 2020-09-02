@@ -12,7 +12,7 @@ it('returns the ticket if the ticket is found', async () => {
   const title = 'title';
   const price = 10;
 
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   const response = await request(app)
     .post('/api/tickets')

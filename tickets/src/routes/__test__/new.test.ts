@@ -14,7 +14,7 @@ it('can only be accessed if the user is signed in', async () => {
 });
 
 it('returns a status other than 401 if the user is signed in', async () => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   const response = await request(app)
     .post('/api/tickets')
@@ -25,7 +25,7 @@ it('returns a status other than 401 if the user is signed in', async () => {
 });
 
 it('returns an error if an empty title is provided', async () => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   const response = await request(app)
     .post('/api/tickets')
@@ -39,7 +39,7 @@ it('returns an error if an empty title is provided', async () => {
 });
 
 it('returns an error if no title is provided', async () => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   const response = await request(app)
     .post('/api/tickets')
@@ -52,7 +52,7 @@ it('returns an error if no title is provided', async () => {
 });
 
 it('returns an error if the provided price is negative', async () => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   const response = await request(app)
     .post('/api/tickets')
@@ -66,7 +66,7 @@ it('returns an error if the provided price is negative', async () => {
 });
 
 it('creates a ticket with valid inputs', async () => {
-  const cookie = await signinHelper('test@test.com');
+  const cookie = signinHelper();
 
   let tickets = await Ticket.find({});
   expect(tickets.length).toEqual(0);
