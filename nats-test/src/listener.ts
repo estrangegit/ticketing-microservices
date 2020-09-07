@@ -10,8 +10,15 @@ const sc = nats.connect('ticketing', randomBytes(4).toString('hex'), {
 sc.on('connect', () => {
   console.log('listener connected to nats');
 
+  sc.on('close', () => {
+    console.log('nats connection closed!');
+    process.exit();
+  });
+
   const options = sc.subscriptionOptions();
   options.setManualAckMode(true);
+  options.setDeliverAllAvailable();
+  options.setDurableName('accounting-service');
 
   const subscription = sc.subscribe(
     'ticket:created',
@@ -26,3 +33,6 @@ sc.on('connect', () => {
     msg.ack();
   });
 });
+
+process.on('SIGINT', () => sc.close());
+process.on('SIGTERM', () => sc.close());
