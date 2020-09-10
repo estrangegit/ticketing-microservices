@@ -7,8 +7,10 @@ export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
   subject: Subjects.TicketCreated = Subjects.TicketCreated;
   queueGroupName = 'payments-service';
 
-  onMessage(data: any, msg: Message): void {
-    console.log(`Received event #${msg.getSequence()}, with data ${data}`);
+  onMessage(data: TicketCreatedEvent['data'], msg: Message): void {
+    console.log(
+      `Received event #${msg.getSequence()}, with data ${JSON.stringify(data)}`
+    );
     msg.ack();
   }
 }
