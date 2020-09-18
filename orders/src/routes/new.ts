@@ -13,6 +13,8 @@ import { Ticket } from '../models/ticket';
 
 const router = express.Router();
 
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+
 router.post(
   '/api/orders',
   requireAuth,
@@ -26,38 +28,38 @@ router.post(
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
 
+    // Find the ticket the user is trying to order in the database
     const existingTicket = await Ticket.findById(ticketId);
 
     if (!existingTicket) {
       throw new NotFoundError();
     }
 
-    // Find the ticket the user is trying to order in the database
-    const existingOrder = await Order.findOne({
-      ticket: existingTicket,
-      status: {
-        $in: [
-          OrderStatus.AwaitingPayment,
-          OrderStatus.Created,
-          OrderStatus.Complete,
-        ],
-      },
-    })
-      .populate({ path: 'ticket', _id: ticketId })
-      .exec();
+    // Make sure that this ticket is not already reserved
+    const isReserved = await existingTicket.isReserved();
 
-    if (existingOrder) {
+    if (isReserved) {
       throw new BadRequestError('ticket is already reserved');
     }
-    // Make sure that this ticket is not already reserved
 
     // Calcluate an expiration date for this order
+    const expirationDate = new Date();
+    expirationDate.setSeconds(
+      expirationDate.getSeconds() + EXPIRATION_WINDOW_SECONDS
+    );
 
     // Build the order and save it to the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expirationDate,
+      ticket: existingTicket,
+    });
+
+    await order.save();
 
     // Publish an event saying that an order was created
-
-    res.send({});
+    res.status(201).send(order);
   }
 );
 
