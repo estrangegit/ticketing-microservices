@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
+import { Order, OrderStatus } from '../../models/order';
+import { Ticket } from '../../models/ticket';
 import { signinHelper } from '../../test/auth-helper';
 
 it('has a route handler listening to /api/orders for post requests', async () => {
@@ -71,11 +73,39 @@ it('returns a 404 error if the ticket does not exists', async () => {
     .set('Cookie', cookie)
     .send({ ticketId });
 
-  console.log(response.status);
-
   expect(response.status).toEqual(404);
 });
 
-it('returns an error if the ticket is already reserved', async () => {});
+it('returns an error if the ticket is already reserved', async () => {
+  const cookie = signinHelper();
+
+  const title: string = 'title';
+  const price: number = 10;
+
+  const ticket = Ticket.build({
+    title,
+    price,
+  });
+
+  await ticket.save();
+
+  const order = Order.build({
+    userId: mongoose.Types.ObjectId().toHexString(),
+    status: OrderStatus.Created,
+    expiresAt: new Date(),
+    ticket,
+  });
+
+  await order.save();
+
+  const response = await request(app)
+    .post('/api/orders')
+    .set('Cookie', cookie)
+    .send({
+      ticketId: ticket.id,
+    });
+
+  expect(response.status).toEqual(400);
+});
 
 it('create an order an reserves a ticket', async () => {});
