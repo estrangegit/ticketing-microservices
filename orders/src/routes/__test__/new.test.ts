@@ -108,4 +108,35 @@ it('returns an error if the ticket is already reserved', async () => {
   expect(response.status).toEqual(400);
 });
 
-it('create an order an reserves a ticket', async () => {});
+it('create an order an reserves a ticket', async () => {
+  const cookie = signinHelper();
+
+  const title: string = 'title';
+  const price: number = 10;
+
+  const ticket = Ticket.build({
+    title,
+    price,
+  });
+
+  await ticket.save();
+
+  const response = await request(app)
+    .post('/api/orders')
+    .set('Cookie', cookie)
+    .send({
+      ticketId: ticket.id,
+    });
+
+  expect(response.status).toEqual(201);
+
+  const orders = await Order.find({}).populate('ticket');
+  expect(orders.length).toEqual(1);
+  expect(orders[0].ticket.price).toEqual(10);
+  expect(orders[0].ticket.title).toEqual('title');
+
+  const tickets = await Order.find({});
+  expect(tickets.length).toEqual(1);
+});
+
+it.todo('emit an order created event');
