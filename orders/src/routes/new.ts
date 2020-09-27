@@ -3,11 +3,10 @@ import {
   NotFoundError,
   OrderStatus,
   requireAuth,
+  validateMongoIdBodyElement,
   validateRequest,
 } from '@ettickets/common';
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
-import mongoose from 'mongoose';
 import { Order } from '../models/order';
 import { Ticket } from '../models/ticket';
 
@@ -18,12 +17,7 @@ const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 router.post(
   '/api/orders',
   requireAuth,
-  [
-    body('ticketId')
-      .notEmpty()
-      .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
-      .withMessage('ticketId must be provided and must be a valid mongodb Id'),
-  ],
+  validateMongoIdBodyElement('ticketId'),
   validateRequest,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;

@@ -2,18 +2,19 @@ import { OrderStatus } from '@ettickets/common';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
+import { Order } from '../../models/order';
 import { Ticket } from '../../models/ticket';
 import { signinHelper } from '../../test/auth-helper';
 
-it('has a route handler listening to /api/orders/:orderId for post requests', async () => {
+it('has a route handler listening to /api/orders/:orderId for delete requests', async () => {
   const orderId = mongoose.Types.ObjectId().toHexString();
-  const response = await request(app).get(`/api/orders/${orderId}`);
+  const response = await request(app).delete(`/api/orders/${orderId}`);
   expect(response.status).not.toEqual(404);
 });
 
 it('can only be accessed if the user is signed in', async () => {
   const orderId = mongoose.Types.ObjectId().toHexString();
-  const response = await request(app).get(`/api/orders/${orderId}`);
+  const response = await request(app).delete(`/api/orders/${orderId}`);
   expect(response.status).toEqual(401);
 });
 
@@ -21,7 +22,7 @@ it('returns a status other than 401 if the user is signed in', async () => {
   const cookie = signinHelper();
   const orderId = mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
-    .get(`/api/orders/${orderId}`)
+    .delete(`/api/orders/${orderId}`)
     .set('Cookie', cookie);
 
   expect(response.status).not.toEqual(401);
@@ -31,7 +32,7 @@ it('returns an error if the orderId is not a valid mongoose Id', async () => {
   const cookie = signinHelper();
 
   const response = await request(app)
-    .get(`/api/orders/1234`)
+    .delete(`/api/orders/1234`)
     .set('Cookie', cookie);
 
   expect(response.status).toEqual(400);
@@ -56,12 +57,12 @@ it('returns an error if the user try to fetch another user order', async () => {
 
   const cookie2 = signinHelper();
   await request(app)
-    .get(`/api/orders/${order.id}`)
+    .delete(`/api/orders/${order.id}`)
     .set('Cookie', cookie2)
     .expect(401);
 });
 
-it('fetches the order', async () => {
+it('cancels the order', async () => {
   const ticket = Ticket.build({
     title: 'title',
     price: 10,
@@ -79,12 +80,15 @@ it('fetches the order', async () => {
     })
     .expect(201);
 
-  const { body: fetchedOrder } = await request(app)
-    .get(`/api/orders/${order.id}`)
-    .set('Cookie', cookie)
-    .expect(200);
+  expect(order.status).toEqual(OrderStatus.Created);
 
-  expect(fetchedOrder.status).toEqual(OrderStatus.Created);
-  expect(fetchedOrder.ticket.title).toEqual('title');
-  expect(fetchedOrder.ticket.price).toEqual(10);
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set('Cookie', cookie)
+    .expect(204);
+
+  const updatedOrder = await Order.findById(order.id);
+  expect(updatedOrder!.status).toEqual(OrderStatus.Cancelled);
 });
+
+it.todo('emit an order cancelled event');
