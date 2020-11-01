@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Order, OrderStatus } from '../../models/order';
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 import { signinHelper } from '../../test/auth-helper';
 
 it('has a route handler listening to /api/orders for post requests', async () => {
@@ -108,7 +109,7 @@ it('returns an error if the ticket is already reserved', async () => {
   expect(response.status).toEqual(400);
 });
 
-it('create an order an reserves a ticket', async () => {
+it('create an order and reserves a ticket', async () => {
   const cookie = signinHelper();
 
   const title: string = 'title';
@@ -139,4 +140,26 @@ it('create an order an reserves a ticket', async () => {
   expect(tickets.length).toEqual(1);
 });
 
-it.todo('emit an order created event');
+it('publishes an order created event', async () => {
+  const cookie = signinHelper();
+
+  const title: string = 'title';
+  const price: number = 10;
+
+  const ticket = Ticket.build({
+    title,
+    price,
+  });
+
+  await ticket.save();
+
+  const response = await request(app)
+    .post('/api/orders')
+    .set('Cookie', cookie)
+    .send({
+      ticketId: ticket.id,
+    });
+
+  expect(response.status).toEqual(201);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});

@@ -7,8 +7,10 @@ import {
   validateRequest,
 } from '@ettickets/common';
 import express, { Request, Response } from 'express';
+import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
 import { Order } from '../models/order';
 import { Ticket } from '../models/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -52,7 +54,17 @@ router.post(
 
     await order.save();
 
-    // Publish an event saying that an order was created
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: req.currentUser!.id,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: existingTicket.id,
+        price: existingTicket.price,
+      },
+    });
+
     res.status(201).send(order);
   }
 );
