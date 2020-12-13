@@ -1,6 +1,6 @@
 {
   "name": "@ettickets/common",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "description": "common service",
   "main": "build/index.js",
   "types": "build/index.d.ts",
