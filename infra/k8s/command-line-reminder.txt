@@ -2,4 +2,4 @@
 2. eval $(minikube docker-env): change docker environment for minikube system
 3. skaffold dev: launch skaffold configuration
 4. kubectl get pods: get pod list
-5. k exec -it auth-mongo-depl-[pods-number] --sh: execute shell on mongo pod
+5. k exec -it auth-mongo-depl-[pods-number] -- sh: execute shell on mongo pod
