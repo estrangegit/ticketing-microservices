@@ -44,10 +44,11 @@ router.put(
     await existingTicket.save();
 
     await new TicketUpdatedPublisher(natsWrapper.client).publish({
-      id: existingTicket.id,
+      id: existingTicket.id!,
       title: existingTicket.title,
       price: existingTicket.price,
       userId: existingTicket.userId,
+      version: existingTicket.version,
     });
 
     res.status(200).send(existingTicket);
