@@ -39,6 +39,7 @@ it('returns an error if the orderId is not a valid mongoose Id', async () => {
 
 it('returns an error if the user try to fetch another user order', async () => {
   const ticket = Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'title',
     price: 10,
   });
@@ -63,6 +64,7 @@ it('returns an error if the user try to fetch another user order', async () => {
 
 it('fetches the order', async () => {
   const ticket = Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'title',
     price: 10,
   });

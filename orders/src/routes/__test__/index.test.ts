@@ -1,10 +1,12 @@
+import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { signinHelper } from '../../test/auth-helper';
 
-const buildTicket = async (title: string, price: number) => {
+const buildTicket = async (id: string, title: string, price: number) => {
   const ticket = Ticket.build({
+    id,
     title,
     price,
   });
@@ -15,9 +17,21 @@ const buildTicket = async (title: string, price: number) => {
 
 it('fetches orders for a particular user', async () => {
   // create three tickets
-  const ticket1 = await buildTicket('title1', 10);
-  const ticket2 = await buildTicket('title2', 20);
-  const ticket3 = await buildTicket('title3', 30);
+  const ticket1 = await buildTicket(
+    mongoose.Types.ObjectId().toHexString(),
+    'title1',
+    10
+  );
+  const ticket2 = await buildTicket(
+    mongoose.Types.ObjectId().toHexString(),
+    'title2',
+    20
+  );
+  const ticket3 = await buildTicket(
+    mongoose.Types.ObjectId().toHexString(),
+    'title3',
+    30
+  );
 
   // create one order as User #1
   const cookieUser1 = signinHelper();
