@@ -8,7 +8,7 @@ interface TicketAttrs {
   price: number;
 }
 
-export interface TicketDoc extends mongoose.Document {
+interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   version: number;
@@ -65,7 +65,7 @@ TicketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
 
 TicketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({
-    ticket: this,
+    ticket: this as TicketDoc,
     status: {
       $in: [
         OrderStatus.AwaitingPayment,
@@ -79,4 +79,4 @@ TicketSchema.methods.isReserved = async function () {
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', TicketSchema);
 
-export { Ticket };
+export { Ticket, TicketDoc };
