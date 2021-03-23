@@ -11,6 +11,9 @@ const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
   }
+  if (!process.env.STRIPE_KEY) {
+    throw new Error('STRIPE_KEY must be defined');
+  }
   if (!process.env.NATS_CLIENT_ID) {
     throw new Error('NATS_CLIENT_ID must be defined');
   }

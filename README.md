@@ -7,5 +7,11 @@ This application is ticketing web application based on microservices architectur
 Initialize JWT Token secret key
 
 ```
-kubectl create secret generic jwt-secret --from-literal=JWT_KEY=SECRET_PRIVATE_KEY
+kubectl create secret generic jwt-secret --from-literal=JWT_KEY=YOUR_SECRET_PRIVATE_KEY
+```
+
+Initialize stripe secret api key
+
+```
+kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=YOUR_SECRET_API_KEY
 ```
