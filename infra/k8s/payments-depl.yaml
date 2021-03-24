@@ -36,6 +36,17 @@ spec:
                 secretKeyRef:
                   name: stripe-secret
                   key: STRIPE_KEY
+      dnsPolicy: 'None'
+      dnsConfig:
+        nameservers:
+          - 89.2.0.1
+          - 89.2.0.2
+          - 10.96.0.10
+        searches:
+          - default.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
+          - numericable.fr
 ---
 apiVersion: v1
 kind: Service

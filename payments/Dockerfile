@@ -8,6 +8,8 @@ RUN npm install --silent --only=prod
 
 COPY . .
 
+RUN apk --no-cache add curl
+
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
