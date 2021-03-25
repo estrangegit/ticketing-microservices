@@ -1,5 +1,8 @@
+import dotenv from 'dotenv';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+
+dotenv.config();
 
 jest.mock('../nats-wrapper');
 
