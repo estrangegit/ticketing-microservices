@@ -16,4 +16,4 @@ Initialize stripe secret api key
 kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=YOUR_SECRET_API_KEY
 ```
 
-Create a .env file in payment projet containing STRIPE_KEY variable for test suite
+Create a .env file in payments service containing STRIPE_KEY variable for test suite
