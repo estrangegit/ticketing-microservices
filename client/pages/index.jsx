@@ -1,29 +1,39 @@
-import buildClient from '../api/build-client';
+import { buildTicketsClient } from '../api/build-client';
 
-const LandingPage = (props) => {
-  if (props.currentUser) {
+const LandingPage = ({ currentUser, tickets }) => {
+  const ticketList = tickets.map((ticket) => {
     return (
-      <div className='container'>
-        <h1>This is the landing page</h1>
-        <h2>
-          You have signed in with the following email: {props.currentUser.email}
-        </h2>
-      </div>
+      <tr key={ticket.id}>
+        <td className='text-center'>{ticket.title}</td>
+        <td className='text-center'>{ticket.price}</td>
+      </tr>
     );
-  } else {
-    return (
-      <div className='container'>
-        <h1>This is the landing page</h1>
-        <h2>You are not signed in</h2>
-      </div>
-    );
-  }
+  });
+
+  return (
+    <div>
+      <h1 className='text-center'>Tickets</h1>
+      <table className='table table-striped'>
+        <thead className='thead-light'>
+          <tr>
+            <th scope='col' className='text-center'>
+              Title
+            </th>
+            <th scope='col' className='text-center'>
+              Price
+            </th>
+          </tr>
+        </thead>
+        <tbody>{ticketList}</tbody>
+      </table>
+    </div>
+  );
 };
 
-LandingPage.getInitialProps = async (context) => {
-  const client = buildClient(context);
-  const { data } = await client.get('/api/users/currentuser');
-  return data;
+LandingPage.getInitialProps = async (context, currentUser) => {
+  const client = buildTicketsClient(context);
+  const { data } = await client.get('/api/tickets');
+  return { tickets: data };
 };
 
 export default LandingPage;

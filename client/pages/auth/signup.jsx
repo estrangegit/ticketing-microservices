@@ -23,7 +23,7 @@ export default function Signup() {
   };
 
   return (
-    <div className='container'>
+    <div>
       <form onSubmit={handleSubmit}>
         <h1 className='text-center'>Sign up</h1>
         <div className='row'>
