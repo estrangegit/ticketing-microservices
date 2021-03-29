@@ -1,5 +1,3 @@
-import { buildTicketsClient } from '../api/build-client';
-
 const LandingPage = ({ currentUser, tickets }) => {
   const ticketList = tickets.map((ticket) => {
     return (
@@ -30,8 +28,7 @@ const LandingPage = ({ currentUser, tickets }) => {
   );
 };
 
-LandingPage.getInitialProps = async (context, currentUser) => {
-  const client = buildTicketsClient(context);
+LandingPage.getInitialProps = async (client, context, currentUser) => {
   const { data } = await client.get('/api/tickets');
   return { tickets: data };
 };
