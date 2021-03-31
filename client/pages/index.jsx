@@ -1,9 +1,19 @@
+import Link from 'next/link';
+
 const LandingPage = ({ currentUser, tickets }) => {
   const ticketList = tickets.map((ticket) => {
     return (
       <tr key={ticket.id}>
         <td className='text-center'>{ticket.title}</td>
         <td className='text-center'>{ticket.price}</td>
+        <td className='text-center'>
+          <Link
+            href='/tickets/[ticketId]'
+            as={`/tickets/${encodeURIComponent(ticket.id)}`}
+          >
+            <a>view</a>
+          </Link>
+        </td>
       </tr>
     );
   });
@@ -19,6 +29,9 @@ const LandingPage = ({ currentUser, tickets }) => {
             </th>
             <th scope='col' className='text-center'>
               Price
+            </th>
+            <th scope='col' className='text-center'>
+              Link
             </th>
           </tr>
         </thead>
