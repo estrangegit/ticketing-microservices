@@ -4,6 +4,8 @@ const Header = (props) => {
   const links = [
     !props.currentUser && { label: 'Sign up', href: '/auth/signup' },
     !props.currentUser && { label: 'Sign in', href: '/auth/signin' },
+    props.currentUser && { label: 'Sell Tickets', href: '/tickets/new' },
+    props.currentUser && { label: 'My orders', href: '/orders' },
     props.currentUser && { label: 'Sign out', href: '/auth/signout' },
   ]
     .filter((linkConfig) => linkConfig)
