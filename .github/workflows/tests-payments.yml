@@ -8,3 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd payments && npm install && npm run test:ci
+        env:
+          STRIPE_KEY='sk_test_51IY5gBEzNqbzg21ZGUf6sF5HlzhG53O0L2R2kQu6Ou4Nyd3DmtJPMAwW8Ci1pLKiWkHxDYoesADZ0T1VbPBavrUi00Zw21c7ZN'
