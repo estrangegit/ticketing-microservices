@@ -8,6 +8,7 @@ import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
   console.log('orders service is starting up');
+
   if (!process.env.MONGO_URI) {
     throw new Error('MONGO_URI must be defined');
   }
