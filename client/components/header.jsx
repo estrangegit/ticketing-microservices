@@ -22,7 +22,7 @@ const Header = (props) => {
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light justify-content-between'>
       <Link href='/'>
-        <a className='navbar-brand'>ticketing-dev</a>
+        <a className='navbar-brand'>ticketing</a>
       </Link>
 
       <div
